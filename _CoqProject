@@ -1,0 +1,3 @@
+-R theories/**
+-arg "-w all"
+theories/**
