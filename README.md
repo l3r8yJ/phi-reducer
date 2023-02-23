@@ -1,4 +1,5 @@
-## phi-reducer
+# Phi-reducer
+[<img src="docs/imgs/phi-reducer.png" width="200"/>](https://l3r8yj.ru/phi-reducer/)
 
 This is an experimental project.
 
@@ -6,7 +7,7 @@ Here's a [phi-calculus](https://arxiv.org/abs/2111.13384) expression:
 
 `[ y -> [ z -> 42 ].z ].y`
 
-It may reduced to:
+It may be reduced to:
 
 `[ z -> 42 ].z`
 
