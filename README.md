@@ -1,5 +1,5 @@
 # Phi-reducer
-[<img src="docs/imgs/phi-reducer.png" width="200"/>](https://l3r8yj.ru/phi-reducer/)
+[<img src="docs/imgs/phi-reducer.png" width="200"/>](https://www.l3r8y.ru/phi-reducer/)
 
 This is an experimental project.
 
