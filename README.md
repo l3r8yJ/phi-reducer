@@ -1,16 +1,19 @@
-# elegant
-This is a pre-configured template for your projects in Java, you can use it with any language, [more about it](https://h1alexbel.github.io/2023/01/21/maintainable-project-template.html)
+## phi-reducer
 
-## Tools:
- - [Rultor](https://www.rultor.com/) for CI/CD.
- - [0pdd](https://www.0pdd.com/) for issue management.
- - [Renovate](https://www.mend.io/free-developer-tools/renovate/) for dependency control.
- - [xcop](https://www.yegor256.com/2017/08/29/xcop.html) GitHub action for XML style check.
+This is an experimental project.
 
-## How to use?
- - Configure actions in `workflows` folder.
- - [Configure](https://doc.rultor.com/reference.html) the `@rultor`.
- - [Configure](https://www.yegor256.com/2017/04/05/pdd-in-action.html) the `0pdd`.
- - [Configure](https://github.com/marketplace/renovate) the `renovate`.
+Here's a [phi-calculus](https://arxiv.org/abs/2111.13384) expression:
 
-And you're good to go!
+`[ y -> [ z -> 42 ].z ].y`
+
+It may reduced to:
+
+`[ z -> 42 ].z`
+
+And then:
+
+`42`
+
+This project analyzes the phi-calculus expression and reduces them if it's possible
+
+### - TBD
