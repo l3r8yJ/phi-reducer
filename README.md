@@ -21,6 +21,11 @@ This project analyzes the phi-calculus expressions and reduces them if it's poss
 
 
 ### How to contribute
+Build pdf and latex, do it carefully, Makefile is still not very good.
 ```shell
-coq_makefile -f _CoqProject -o CoqMakefile
+make
+```
+Removes pdf, latex
+```shell
+make
 ```
