@@ -8,8 +8,6 @@ Definition negb (b : bool) : bool :=
    | false => true
    end.
 
-Eval compute in negb false.
-
 Theorem negb_negb: forall (b : bool), negb (negb b) = b.
 Proof.
    intros b.
@@ -25,3 +23,24 @@ Proof.
    + simpl. reflexivity.
    + simpl. reflexivity. 
 Qed.
+
+Definition andb (a b : bool) : bool :=
+   match a, b with
+   | true, true => true
+   | _, _ => false
+   end.
+
+Theorem and_true_both_arg_true : forall (a b : bool),
+   a = true -> b = true ->  andb a b = true.
+Proof.
+   intros a b Ha Hb.
+   rewrite Ha.
+   rewrite Hb.
+   simpl. reflexivity.
+Qed.
+
+Definition or (a b : bool) : bool :=
+   match a, b with
+   | false, false => false
+   | _, _ => true
+   end.
