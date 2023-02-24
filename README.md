@@ -15,7 +15,7 @@ And then:
 
 `42`
 
-This project analyzes the phi-calculus expression and reduces them if it's possible
+This project analyzes the phi-calculus expressions and reduces them if it's possible
 
 ### - TBD
 
