@@ -19,6 +19,7 @@ This project analyzes the phi-calculus expressions and reduces them if it's poss
 
 ### - TBD
 
+if you want to try to play with it, do [this](https://www.l3r8y.ru/2023/02/24/how-to-coq) before getting started
 
 ### How to contribute
 Build pdf and latex, do it carefully, Makefile is still not very good.
@@ -27,5 +28,5 @@ make
 ```
 Removes pdf, latex
 ```shell
-make
+make clean
 ```
