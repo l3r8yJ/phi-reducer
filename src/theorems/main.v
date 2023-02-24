@@ -1,8 +1,11 @@
-Theorem main_t: 1 + 1 = 2 : forall a,
-  0 <= a.
-Proof.
-  intros.
-  destruct a.
-  - reflexivity.
-  - apply le_0_en.
-Qed.
+Inductive bool := 
+| true
+| false.
+
+Definition negb (b : bool) : bool :=
+   match b with
+   | true => false
+   | false => true
+   end.
+
+Eval compute in negb false.
