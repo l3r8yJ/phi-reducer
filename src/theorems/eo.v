@@ -26,4 +26,5 @@ Inductive EOExpr : Type :=
 with EOEnv : Type :=
   | EOEmptyEnv : EOEnv
   | EOBind : string -> EOExpr -> EOEnv -> EOEnv.
+
 (* TODO: Write an evaluation of EO ebnf *)
