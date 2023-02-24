@@ -1,20 +1,54 @@
-%: CoqMakefile phony
-	+make -f Makefile.coq $@
+SRC := src
+COQPROJECT := _CoqProject
+COQMAKEFILE := Makefile.coq
+COQDEP := coqdep
+COQDOC := coqdoc
+COQC := coqc
+COQFLAGS := -R . PhiReducer
+COQDOCFLAGS := --latex -d $(SRC)/theorems/
+PAPERSDIR := papers
 
-all: CoqMakefile
-	+make -f Makefile.coq all
+LATEXMK := latexmk
+LATEXFLAGS :=
 
-clean: CoqMakefile
-	+make -f Makefile.coq clean
-	rm -f Makefile.coq
+.PHONY: all clean
 
-Makefile.coq: _CoqProject Makefile
-	coq_makefile -f _CoqProject | sed 's/$$(COQCHK) $$(COQCHKFLAGS) $$(COQLIBS)/$$(COQCHK) $$(COQCHKFLAGS) $$(subst -Q,-R,$$(COQLIBS))/' > Makefile.coq
+all: $(COQMAKEFILE)
+	$(MAKE) -f $(COQMAKEFILE)
+	$(MAKE) latex
 
-_CoqProject: ;
+$(COQMAKEFILE): $(COQPROJECT)
+	coq_makefile $(COQFLAGS) -f $(COQPROJECT) -o $(COQMAKEFILE)
 
-Makefile: ;
+%.vo: %.v
+	$(COQC) $(COQFLAGS) $<
 
-phony: ;
+%.tex: %.v
+	mkdir -p $(PAPERSDIR)
+	$(COQC) $(COQFLAGS) $<
+	$(COQDOC) $(COQDOCFLAGS) $*.v $<
+	$(LATEXMK) $(LATEXFLAGS) -pdf $*.tex $<
+	mv $*pdf ../../$(PAPERSDIR)/
 
-.PHONY: all clean phony
+latex: $(patsubst %.v,%.tex,$(wildcard $(SRC)/theorems/*.v))
+
+clean:
+	$(MAKE) -f $(COQMAKEFILE) clean
+	rm -f $(COQMAKEFILE)
+	find . -name "*.vos" -type f -delete
+	find . -name "*.vok" -type f -delete
+	find . -name "*.out" -type f -delete
+	find . -name "*.log" -type f -delete
+	find . -name "*.aux" -type f -delete
+	find . -name "*.fls" -type f -delete
+	find . -name "*.sty" -type f -delete
+	find . -name "*.glob" -type f -delete
+	find . -name "*.vo" -type f -delete
+	find . -name "*.tex" -type f -delete
+	find . -name "*.fdb_latexmk" -type f -delete
+	rm -f *.html *.css
+
+depend: $(COQPROJECT)
+	$(COQDEP) $(COQFLAGS) -f $(COQPROJECT) -I . $(SRC)/theorems/*.v > .depend
+
+-include .depend

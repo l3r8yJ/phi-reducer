@@ -1,0 +1,2 @@
+-R . PhiReducer
+-Q src/theorems PhiReducer

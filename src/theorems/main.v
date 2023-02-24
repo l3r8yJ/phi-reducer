@@ -71,3 +71,15 @@ Proof.
   intros [|] [|]; simpl; reflexivity.
   Show Proof.
 Qed.
+
+Definition orb(a b : bool) : bool :=
+  match a, b with
+  | false, false => false
+  | _, _ => true
+  end.
+
+Theorem andb_negb_orb : forall (a b : bool),
+  negb (andb a b) = orb (negb a) (negb b).
+Proof.
+  intros [|] [|]; simpl; reflexivity.
+Qed.
