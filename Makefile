@@ -13,6 +13,7 @@ PDF_FILES = $(patsubst $(PAPERS_DIR)/%.tex,$(PAPERS_DIR)/%.pdf,$(TEX_FILES))
 COQ_MAKEFILE = coq_makefile
 COQ_MAKEFILE_OPTS = -f _CoqProject -o Makefile.coq
 COQ_MAKE = make -f Makefile.coq
+COQ_COMPILE = coqc -verbose
 LATEXMK = latexmk
 LATEXMK_FLAGS = -pdf -interaction=nonstopmode -outdir=$(PAPERS_DIR)
 RM = rm -f
@@ -25,7 +26,8 @@ all: $(PDF_FILES)
 $(TEX_FILES): $(V_FILES) | $(PAPERS_DIR)
 	$(COQ_MAKEFILE) $(COQ_MAKEFILE_OPTS)
 	$(COQ_MAKE)
-	coqdoc -s --latex --no-externals --toc --index --bibliography --title "Phi Reducer" -o $(PAPERS_DIR)/$(@F) $^
+	$(foreach var, $(V_FILES), $(COQ_COMPILE) $(var);)
+	coqdoc --latex -o $(PAPERS_DIR)/$(@F) $^
 
 $(PDF_FILES): $(TEX_FILES)
 	$(LATEXMK) $(LATEXMK_FLAGS) $<
@@ -36,6 +38,11 @@ $(PAPERS_DIR):
 clean:
 	$(COQ_MAKE) clean
 	$(RM) $(PDF_FILES) $(TEX_FILES) Makefile.coq
+	$(RM) $(SRC_DIR)/**.aux
+	$(RM) $(SRC_DIR)/*.glob
+	$(RM) $(SRC_DIR)/*.vo
+	$(RM) $(SRC_DIR)/*.vok
+	$(RM) $(SRC_DIR)/*.vos
 	$(RM) $(PAPERS_DIR)/*.sty
 	$(RM) $(PAPERS_DIR)/*.aux
 	$(RM) $(PAPERS_DIR)/*.fdb_latexmk
