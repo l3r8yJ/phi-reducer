@@ -1,3 +1,5 @@
+Require Import Bool.
+
 Inductive bool := 
 | true
 | false.
@@ -7,8 +9,6 @@ Definition negb (b : bool) : bool :=
   | true => false
   | false => true
   end.
-
-Eval compute in negb (negb false).
 
 Theorem negb_negb: forall (b : bool), negb (negb b) = b.
 Proof.
@@ -69,7 +69,6 @@ Qed.
 Theorem andb_comutative : forall a b, andb a b = andb b a.
 Proof.
   intros [|] [|]; simpl; reflexivity.
-  Show Proof.
 Qed.
 
 Definition orb(a b : bool) : bool :=
@@ -82,4 +81,20 @@ Theorem andb_negb_orb : forall (a b : bool),
   negb (andb a b) = orb (negb a) (negb b).
 Proof.
   intros [|] [|]; simpl; reflexivity.
+Qed.
+
+Definition material(a b : bool) : bool :=
+match a,b with
+  | false, true => false
+  | _, _ => true
+end.
+
+Theorem positive_material : forall a b : bool, 
+  a = true -> material a b = true.
+  Proof.
+    intros a b Ha.
+    destruct a eqn:E.
+    - simpl. destruct b; reflexivity.
+    - discriminate Ha. 
+    Show Proof.
 Qed.
