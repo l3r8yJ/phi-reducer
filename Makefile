@@ -1,54 +1,44 @@
-SRC := src
-COQPROJECT := _CoqProject
-COQMAKEFILE := Makefile.coq
-COQDEP := coqdep
-COQDOC := coqdoc
-COQC := coqc
-COQFLAGS := -R . PhiReducer
-COQDOCFLAGS := --latex -d $(SRC)/theorems/
-PAPERSDIR := papers
+# Makefile for generating PDFs from Coq files
 
-LATEXMK := latexmk
-LATEXFLAGS :=
+# Directories
+SRC_DIR = src/theorems
+PAPERS_DIR = papers
 
+# Files
+V_FILES = $(wildcard $(SRC_DIR)/*.v)
+TEX_FILES = $(patsubst $(SRC_DIR)/%.v,$(PAPERS_DIR)/%.tex,$(V_FILES))
+PDF_FILES = $(patsubst $(PAPERS_DIR)/%.tex,$(PAPERS_DIR)/%.pdf,$(TEX_FILES))
+
+# Commands
+COQ_MAKEFILE = coq_makefile
+COQ_MAKEFILE_OPTS = -f _CoqProject -o Makefile.coq
+COQ_MAKE = make -f Makefile.coq
+LATEXMK = latexmk
+LATEXMK_FLAGS = -pdf -interaction=nonstopmode -outdir=$(PAPERS_DIR)
+RM = rm -f
+
+# Targets
 .PHONY: all clean
 
-all: $(COQMAKEFILE)
-	$(MAKE) -f $(COQMAKEFILE)
-	$(MAKE) latex
+all: $(PDF_FILES)
 
-$(COQMAKEFILE): $(COQPROJECT)
-	coq_makefile $(COQFLAGS) -f $(COQPROJECT) -o $(COQMAKEFILE)
+$(TEX_FILES): $(V_FILES) | $(PAPERS_DIR)
+	$(COQ_MAKEFILE) $(COQ_MAKEFILE_OPTS)
+	$(COQ_MAKE)
+	coqdoc -s --latex --no-externals --toc --index --bibliography --title "Phi Reducer" -o $(PAPERS_DIR)/$(@F) $^
 
-%.vo: %.v
-	$(COQC) $(COQFLAGS) $<
+$(PDF_FILES): $(TEX_FILES)
+	$(LATEXMK) $(LATEXMK_FLAGS) $<
 
-%.tex: %.v
-	mkdir -p $(PAPERSDIR)
-	$(COQC) $(COQFLAGS) $<
-	$(COQDOC) $(COQDOCFLAGS) $*.v $<
-	$(LATEXMK) $(LATEXFLAGS) -pdf $*.tex $<
-	mv $*pdf ../../$(PAPERSDIR)/
-
-latex: $(patsubst %.v,%.tex,$(wildcard $(SRC)/theorems/*.v))
+$(PAPERS_DIR):
+	mkdir -p $(PAPERS_DIR)
 
 clean:
-	$(MAKE) -f $(COQMAKEFILE) clean
-	rm -f $(COQMAKEFILE)
-	find . -name "*.vos" -type f -delete
-	find . -name "*.vok" -type f -delete
-	find . -name "*.out" -type f -delete
-	find . -name "*.log" -type f -delete
-	find . -name "*.aux" -type f -delete
-	find . -name "*.fls" -type f -delete
-	find . -name "*.sty" -type f -delete
-	find . -name "*.glob" -type f -delete
-	find . -name "*.vo" -type f -delete
-	find . -name "*.tex" -type f -delete
-	find . -name "*.fdb_latexmk" -type f -delete
-	rm -f *.html *.css
-
-depend: $(COQPROJECT)
-	$(COQDEP) $(COQFLAGS) -f $(COQPROJECT) -I . $(SRC)/theorems/*.v > .depend
-
--include .depend
+	$(COQ_MAKE) clean
+	$(RM) $(PDF_FILES) $(TEX_FILES) Makefile.coq
+	$(RM) $(PAPERS_DIR)/*.sty
+	$(RM) $(PAPERS_DIR)/*.aux
+	$(RM) $(PAPERS_DIR)/*.fdb_latexmk
+	$(RM) $(PAPERS_DIR)/*.fls
+	$(RM) $(PAPERS_DIR)/*.log
+	$(RM) $(PAPERS_DIR)/*.out
